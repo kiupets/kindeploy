@@ -145,3 +145,9 @@ impl TryFrom<String> for Environment {
         }
     }
 }
+// host     : app-1cd10ab5-ccc9-4285-9045-ca6c5cec14e3-do-user-14579213-0.b.db.ondigitalocean.com
+// port     : 25060
+// username : kin
+// password : AVNS_JO3Bq2cPAcJhs-Py6_L
+// database : kin
+// sslmode  : require
