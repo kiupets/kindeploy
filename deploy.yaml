@@ -17,5 +17,5 @@ jobs:
           scripts: |
             mkdir test #create folder you want to deploy to in the live server
             cd test
-            git clone git@github.com:kiupets/kinhotelrust.git
+            git clone git@github.com:kiupets/kindeploy.git
             echo "Deployment succesful to digitalocean"
