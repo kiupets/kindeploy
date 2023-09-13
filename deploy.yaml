@@ -1,0 +1,21 @@
+name: Build & Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Rust app
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+
+          scripts: |
+            mkdir test #create folder you want to deploy to in the live server
+            cd test
+            git clone git@github.com:kiupets/kinhotelrust.git
+            echo "Deployment succesful to digitalocean"

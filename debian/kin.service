@@ -1,0 +1,13 @@
+[Unit]
+AssertPathExists=/usr/bin/kin
+
+[Service]
+WorkingDirectory=/home/kinhotel/kinhotelrust
+ExecStart=/usr/bin/kin
+Restart=always
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+Alias=kin
+WantedBy=default.target

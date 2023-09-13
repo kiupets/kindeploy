@@ -1,0 +1,98 @@
+[package]
+name = "kinhotelrust"
+version = "0.1.0"
+edition = "2021"
+authors = ["Gonzalo Gil <gonzalogg1975@gmail.com>"]
+
+
+[lib]
+# We could use any path here, but we are following the community convention
+# We could specify a library name using the `name` field. If unspecified,
+# cargo will default to `package.name`, which is what we want.
+path = "src/lib.rs"
+
+# If you want to manage multiple libraries in the same repository
+# have a look at the workspace feature - we'll cover it later on.
+[[bin]]
+path = "src/main.rs"
+name = "kinhotelrust"
+
+[[test]]
+name = "kinhotelrust"
+path = "tests/health_check.rs"
+
+
+[dependencies]
+actix-web = "4.1.0"
+actix-cors = "0.6.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.81"
+actix-files = "0.6.1"
+actix-service = "2.0.2"
+chrono = { version = "0.4.22", default-features = false, features = ["clock"] }
+log = "0.4.17"
+env_logger = "0.9.0"
+serde_derive = "1.0.137"
+futures = "0.3.21"
+tokio = { version = "1.27.0", features = ["macros", "rt-multi-thread"] }
+tokio-tungstenite = "*"
+dotenv = "0.15.0"
+actix = "0.13.0"
+uuid = { version = "1.1.2", features = ["serde", "v4"] }
+actix-web-actors = "4.1.0"
+actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
+ws = "0.9.2"
+derive_more = "0.99.9"
+config = "0.13.2"
+actix-web-lab = "0.18"
+jsonwebtoken = "8.3.0"
+tracing = "0.1.19"
+tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+tracing-bunyan-formatter = "0.3"
+tracing-log = "0.1.1"
+secrecy = { version = "0.8", features = ["serde"] }
+actix-session = { version = "0.7", features = ["redis-rs-tls-session"] }
+argon2 = { version = "0.5.0", features = ["std"] }
+bcrypt = "0.14.0"
+
+serde-aux = "4"
+thiserror = "1.0.40"
+unicode-segmentation = "1.7.1"
+anyhow = "1.0.70"
+actix-rt = "2.8.0"
+validator = "0.16"
+rand = { version = "0.8", features = ["std_rng"] }
+reqwest = { version = "0.11", default-features = false, features = [
+    "json",
+    "rustls-tls",
+    "cookies",
+] }
+[dev-dependencies]
+once_cell = "1.7.2"
+claims = "0.7.0"
+quickcheck = "0.9.2"
+quickcheck_macros = "0.9.1"
+fake = "~2.3.0"
+wiremock = "0.5"
+serde_json = "1.0.61"
+serde_urlencoded = "0.7.1"
+linkify = "0.9"
+
+[dependencies.mongodb]
+version = "2.2.0"
+default-features = false
+features = ["async-std-runtime"]
+
+# Using table-like toml syntax to avoid a super-long line!
+[dependencies.sqlx]
+version = "0.6"
+default-features = false
+features = [
+    "runtime-tokio-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate",
+    "offline",
+]
