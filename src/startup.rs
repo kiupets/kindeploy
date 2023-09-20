@@ -54,6 +54,7 @@ impl Application {
         );
         let listener = TcpListener::bind(address)?;
         let port = listener.local_addr().unwrap().port();
+
         let server = run(
             listener,
             connection_pool,
@@ -125,7 +126,7 @@ pub async fn run(
             // .route("/login", web::post().to(login))
             .route("/health_check", web::get().to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
-            .route("/subscriptions/confirm", web::get().to(confirm))
+            .route("/subscriptions_confirm", web::get().to(confirm))
             // .route("/newsletters", web::post().to(publish_newsletter))
             // .app_data(db_pool.clone())
             // .app_data(email_client.clone())
