@@ -131,7 +131,7 @@ pub async fn run(
             // .route("/newsletters", web::post().to(publish_newsletter))
             // .app_data(db_pool.clone())
             // .app_data(email_client.clone())
-            // .app_data(base_url.clone())
+            .app_data(base_url.clone())
             // .app_data(Data::new(HmacSecret(hmac_secret.clone())))
             .route("/subscriptions", web::post().to(subscribe))
             .app_data(db_pool.clone())
