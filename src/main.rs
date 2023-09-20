@@ -4,7 +4,7 @@ use actix::prelude::{Actor, Context, Handler, Message as ActixMessage, Recipient
 use env_logger::Env;
 use kinhotelrust::configuration::get_configuration;
 // use kinhotelrust::issue_delivery_worker::run_worker_until_stopped;
-use kinhotelrust::issue_delivery_worker::run_worker_until_stopped;
+// use kinhotelrust::issue_delivery_worker::run_worker_until_stopped;
 use kinhotelrust::repository::mongodb_repo::MongoRepo;
 use kinhotelrust::startup::run;
 use kinhotelrust::startup::Application;
@@ -28,7 +28,7 @@ async fn main() -> anyhow::Result<()> {
     let configuration = get_configuration().expect("Failed to read configuration.");
     let application = Application::build(configuration.clone()).await?;
     let application_task = tokio::spawn(application.run_until_stopped());
-    let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
+    // let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
     // let application_task = tokio::spawn(application.run_until_stopped());
     // let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
     // tokio::spawn(async move {
@@ -36,7 +36,7 @@ async fn main() -> anyhow::Result<()> {
     // });
     tokio::select! {
         o = application_task => report_exit("API", o),
-        o = worker_task =>  report_exit("Background worker", o),
+        // o = worker_task =>  report_exit("Background worker", o),
     };
     // let connection_pool = PgPool::connect(&configuration.database.connection_string())
     // .await
