@@ -4,9 +4,11 @@ use actix::prelude::{Actor, Context, Handler, Message as ActixMessage, Recipient
 use env_logger::Env;
 use kinhotelrust::configuration::get_configuration;
 // use kinhotelrust::issue_delivery_worker::run_worker_until_stopped;
+use kinhotelrust::issue_delivery_worker::run_worker_until_stopped;
 use kinhotelrust::repository::mongodb_repo::MongoRepo;
 use kinhotelrust::startup::run;
 use kinhotelrust::startup::Application;
+use kinhotelrust::telemetry::{get_subscriber, init_subscriber};
 use kinhotelrust::websocket::server::Server;
 use kinhotelrust::websocket2::server_shit::Server2;
 use sqlx::PgPool;
@@ -15,6 +17,8 @@ use std::net::TcpListener;
 use tokio::task::JoinError;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let subscriber = get_subscriber("zero2prod".into(), "info".into(), std::io::stdout);
+    init_subscriber(subscriber);
     // env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     // let websocket_task = websocket::server::Server::new().start();
     // let socket_server2 = Server2::new().start();
@@ -24,6 +28,7 @@ async fn main() -> anyhow::Result<()> {
     let configuration = get_configuration().expect("Failed to read configuration.");
     let application = Application::build(configuration.clone()).await?;
     let application_task = tokio::spawn(application.run_until_stopped());
+    let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
     // let application_task = tokio::spawn(application.run_until_stopped());
     // let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
     // tokio::spawn(async move {
@@ -31,7 +36,7 @@ async fn main() -> anyhow::Result<()> {
     // });
     tokio::select! {
         o = application_task => report_exit("API", o),
-        // o = worker_task =>  report_exit("Background worker", o),
+        o = worker_task =>  report_exit("Background worker", o),
     };
     // let connection_pool = PgPool::connect(&configuration.database.connection_string())
     // .await

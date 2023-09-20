@@ -59,9 +59,9 @@ impl Application {
             listener,
             connection_pool,
             db, // web_socket_server, // email_client,
-                // configuration.application.base_url,
-                // configuration.application.hmac_secret,
-                // configuration.redis_uri,
+            configuration.application.base_url,
+            // configuration.application.hmac_secret,
+            // configuration.redis_uri,
         )
         .await?;
 
@@ -89,6 +89,7 @@ pub async fn run(
     listener: TcpListener,
     db_pool: PgPool,
     db: MongoRepo,
+    base_url: String,
     // socket_server: Addr<WebSocketServer>,
 ) -> Result<Server, std::io::Error> {
     // let HOST = env::var("HOST").expect("Host not set");
