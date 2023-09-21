@@ -17,7 +17,7 @@ use std::net::TcpListener;
 use tokio::task::JoinError;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let subscriber = get_subscriber("zero2prod".into(), "info".into(), std::io::stdout);
+    let subscriber = get_subscriber("kinhotelrust".into(), "info".into(), std::io::stdout);
     init_subscriber(subscriber);
     // env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     // let websocket_task = websocket::server::Server::new().start();
