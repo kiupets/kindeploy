@@ -64,30 +64,30 @@ pub async fn subscribe(
     email_client: web::Data<EmailClient>,
     base_url: web::Data<ApplicationBaseUrl>,
 ) -> Result<HttpResponse, SubscribeError> {
-    // let new_subscriber = form.0.try_into().map_err(SubscribeError::ValidationError)?;
+    let new_subscriber = form.0.try_into().map_err(SubscribeError::ValidationError)?;
     let mut transaction = pool
         .begin()
         .await
         .context("Failed to acquire a Postgres connection from the pool")?;
-    // let subscriber_id = insert_subscriber(&mut transaction, &new_subscriber)
-    //     .await
-    //     .context("Failed to insert new subscriber in the database.")?;
-    // let subscription_token = generate_subscription_token();
-    // store_token(&mut transaction, subscriber_id, &subscription_token)
-    //     .await
-    //     .context("Failed to store the confirmation token for a new subscriber.")?;
-    // transaction
-    //     .commit()
-    //     .await
-    //     .context("Failed to commit SQL transaction to store a new subscriber.")?;
-    // send_confirmation_email(
-    //     &email_client,
-    //     new_subscriber,
-    //     &base_url.0,
-    //     &subscription_token,
-    // )
-    // .await
-    // .context("Failed to send a confirmation email.")?;
+    let subscriber_id = insert_subscriber(&mut transaction, &new_subscriber)
+        .await
+        .context("Failed to insert new subscriber in the database.")?;
+    let subscription_token = generate_subscription_token();
+    store_token(&mut transaction, subscriber_id, &subscription_token)
+        .await
+        .context("Failed to store the confirmation token for a new subscriber.")?;
+    transaction
+        .commit()
+        .await
+        .context("Failed to commit SQL transaction to store a new subscriber.")?;
+    send_confirmation_email(
+        &email_client,
+        new_subscriber,
+        &base_url.0,
+        &subscription_token,
+    )
+    .await
+    .context("Failed to send a confirmation email.")?;
     Ok(HttpResponse::Ok().finish())
 }
 
