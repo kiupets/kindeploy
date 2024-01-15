@@ -72,6 +72,7 @@ use actix_session::SessionMiddleware;
 use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use kinhotelrust::configuration;
+
 use kinhotelrust::configuration::{DatabaseSettings, Settings};
 use kinhotelrust::routes::{
     admin_dashboard, change_password, change_password_form, confirm, health_check, home, log_out,
@@ -95,11 +96,16 @@ use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
 // mod websocket;
 // mod websocket2;
-
+use kinhotelrust::startup::ApplicationBaseUrl;
 // pub fn routes(cfg: &mut web::ServiceConfig) {
 //     cfg.service(web::resource("/ws").route(web::get().to(ws_index)));
 // }
-
+// pub struct ApplicationBaseUrl(pub String);
+pub fn get_connection_pool(configuration: &DatabaseSettings) -> PgPool {
+    PgPoolOptions::new().connect_lazy_with(configuration.with_db())
+}
+#[derive(Clone)]
+pub struct HmacSecret(pub Secret<String>);
 #[actix_web::main]
 
 async fn main() -> Result<(), anyhow::Error> {
@@ -189,7 +195,7 @@ async fn main() -> Result<(), anyhow::Error> {
             .service(update_rented)
             .service(get_rented)
             .service(get_all)
-            .route("/hotel", web::get().to(single_page_app))
+            // .route("/hotel", web::get().to(single_page_app))
             .service(Files::new("/", "./build").index_file("index.html"))
 
         // .service(Files::new("/hotel", "./build").index_file("index.html"))
@@ -201,14 +207,8 @@ async fn main() -> Result<(), anyhow::Error> {
     .await;
     Ok(())
 }
-async fn single_page_app() -> Result<fs::NamedFile> {
-    // 1.
-    let path: PathBuf = PathBuf::from("./build/index.html");
-    Ok(NamedFile::open(path)?)
-}
-pub struct ApplicationBaseUrl(pub String);
-pub fn get_connection_pool(configuration: &DatabaseSettings) -> PgPool {
-    PgPoolOptions::new().connect_lazy_with(configuration.with_db())
-}
-#[derive(Clone)]
-pub struct HmacSecret(pub Secret<String>);
+// async fn single_page_app() -> Result<fs::NamedFile> {
+//     // 1.
+//     let path: PathBuf = PathBuf::from("./build/index.html");
+//     Ok(NamedFile::open(path)?)
+// }

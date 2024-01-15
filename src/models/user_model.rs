@@ -1,6 +1,6 @@
 use mongodb::bson::oid::ObjectId;
+use secrecy::{ExposeSecret, Secret};
 use serde::{Deserialize, Serialize};
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]

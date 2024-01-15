@@ -5,17 +5,18 @@ edition = "2021"
 authors = ["Gonzalo Gil <gonzalogg1975@gmail.com>"]
 
 
+# If you want to manage multiple libraries in the same repository
+# have a look at the workspace feature - we'll cover it later on.
+[[bin]]
+path = "src/main.rs"
+name = "kinhotelrust"
+
 [lib]
 # We could use any path here, but we are following the community convention
 # We could specify a library name using the `name` field. If unspecified,
 # cargo will default to `package.name`, which is what we want.
 path = "src/lib.rs"
 
-# If you want to manage multiple libraries in the same repository
-# have a look at the workspace feature - we'll cover it later on.
-[[bin]]
-path = "src/main.rs"
-name = "kinhotelrust"
 
 [[test]]
 name = "kinhotelrust"

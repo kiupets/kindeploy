@@ -16,7 +16,7 @@ COPY . .
 
 ENV SQLX_OFFLINE true
 # Build our project
-RUN cargo build --release --bin kinhotelrust
+RUN  cargo build --release --bin kinhotelrust
 
 FROM debian:bullseye-slim AS runtime
 WORKDIR /app

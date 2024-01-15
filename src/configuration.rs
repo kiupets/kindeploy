@@ -3,7 +3,6 @@ use crate::email_client::EmailClient;
 use secrecy::{ExposeSecret, Secret};
 use serde_aux::field_attributes::deserialize_number_from_string;
 use sqlx::postgres::{PgConnectOptions, PgSslMode};
-use sqlx::ConnectOptions;
 use std::convert::{TryFrom, TryInto};
 
 #[derive(serde::Deserialize, Clone)]
@@ -50,9 +49,7 @@ impl DatabaseSettings {
     }
 
     pub fn with_db(&self) -> PgConnectOptions {
-        let mut options = self.without_db().database(&self.database_name);
-        options.log_statements(tracing::log::LevelFilter::Trace);
-        options
+        self.without_db().database(&self.database_name)
     }
 }
 
@@ -145,9 +142,3 @@ impl TryFrom<String> for Environment {
         }
     }
 }
-// host     : app-1cd10ab5-ccc9-4285-9045-ca6c5cec14e3-do-user-14579213-0.b.db.ondigitalocean.com
-// port     : 25060
-// username : kin
-// password : AVNS_JO3Bq2cPAcJhs-Py6_L
-// database : kin
-// sslmode  : require
