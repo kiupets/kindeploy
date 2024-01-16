@@ -1,55 +1,3 @@
-// use actix::Actor;
-// use kinhotelrust::configuration::get_configuration;
-// use kinhotelrust::issue_delivery_worker::run_worker_until_stopped;
-// use kinhotelrust::startup::Application;
-// use kinhotelrust::telemetry::{get_subscriber, init_subscriber};
-// use std::fmt::{Debug, Display};
-// use tokio::task::JoinError;
-// mod websocket;
-// mod websocket2;
-
-// #[actix_web::main]
-// async fn main() -> anyhow::Result<()> {
-//     let subscriber = get_subscriber("kinhotelrust".into(), "info".into(), std::io::stdout);
-//     init_subscriber(subscriber);
-
-//     let configuration = get_configuration().expect("Failed to read configuration.");
-
-//     let application = Application::build(configuration.clone()).await?;
-//     let application_task = tokio::spawn(application.run_until_stopped());
-//     let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
-
-//     tokio::select! {
-//         o = application_task => report_exit("API", o),
-//         o = worker_task =>  report_exit("Background worker", o),
-//     };
-
-//     Ok(())
-// }
-
-// fn report_exit(task_name: &str, outcome: Result<Result<(), impl Debug + Display>, JoinError>) {
-//     match outcome {
-//         Ok(Ok(())) => {
-//             tracing::info!("{} has exited", task_name)
-//         }
-//         Ok(Err(e)) => {
-//             tracing::error!(
-//                 error.cause_chain = ?e,
-//                 error.message = %e,
-//                 "{} failed",
-//                 task_name
-//             )
-//         }
-//         Err(e) => {
-//             tracing::error!(
-//                 error.cause_chain = ?e,
-//                 error.message = %e,
-//                 "{}' task failed to complete",
-//                 task_name
-//             )
-//         }
-//     }
-// }
 use actix::Actor;
 use actix::{Addr, Running, StreamHandler};
 use actix_cors::Cors;
@@ -57,7 +5,6 @@ use actix_files::{Files, NamedFile};
 use actix_web::{get, post, web, web::Data, web::Payload, Error, HttpRequest, HttpResponse};
 use actix_web::{middleware, App, HttpServer, Responder, Result};
 use actix_web_actors::ws;
-// use console;
 use kinhotelrust::configuration::get_configuration;
 use std::env;
 use std::path::PathBuf;
@@ -82,7 +29,6 @@ use kinhotelrust::routes::{
 use websocket::web_server::ws_index;
 use websocket2::web_server2::ws_index_drag;
 
-use actix_files as fs;
 use actix_web::http::header::{ContentDisposition, DispositionType};
 use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
@@ -96,7 +42,8 @@ use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
 // mod websocket;
 // mod websocket2;
-use kinhotelrust::startup::ApplicationBaseUrl;
+
+pub(crate) struct ApplicationBaseUrl(pub String);
 // pub fn routes(cfg: &mut web::ServiceConfig) {
 //     cfg.service(web::resource("/ws").route(web::get().to(ws_index)));
 // }
@@ -118,12 +65,12 @@ async fn main() -> Result<(), anyhow::Error> {
     let connection_pool = get_connection_pool(&configuration.database);
     let email_client = configuration.email_client.client();
 
-    // let address = format!(
-    //     "{}:{}",
-    //     configuration.application.host, configuration.application.port
-    // );
-    // let listener = TcpListener::bind(address)?;
-    // let port = listener.local_addr().unwrap().port();
+    let address = format!(
+        "{}:{}",
+        configuration.application.host, configuration.application.port
+    );
+    let listener = TcpListener::bind(address)?;
+    let port = listener.local_addr().unwrap().port();
     let server_s = websocket::server::Server::new().start();
 
     let server_s2 = websocket2::server_shit::Server2::new().start();
@@ -200,15 +147,10 @@ async fn main() -> Result<(), anyhow::Error> {
 
         // .service(Files::new("/hotel", "./build").index_file("index.html"))
     })
-    .workers(2)
     // .bind(format!("{}:{}", HOST, PORT))?
-    .bind("127.0.0.1:8000")?
+    // .bind("127.0.0.1:8000")?
+    .listen(listener)?
     .run()
     .await;
     Ok(())
 }
-// async fn single_page_app() -> Result<fs::NamedFile> {
-//     // 1.
-//     let path: PathBuf = PathBuf::from("./build/index.html");
-//     Ok(NamedFile::open(path)?)
-// }
