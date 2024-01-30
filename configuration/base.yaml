@@ -2,8 +2,7 @@ application:
   port: 8000
   host: 127.0.0.1
   hmac_secret: "super-long-and-secret-random-key-needed-to-verify-message-integrity"
-  base_url: "localhost"
-redis_uri: "redis://127.0.0.1:6379"
+
 database:
   host: "127.0.0.1"
   port: 5432
@@ -11,8 +10,7 @@ database:
   password: "password"
   database_name: "newsletter"
   require_ssl: false
-  base_url: "localhost"
-redis_uri: "redis://127.0.0.1:6379"
+
 email_client:
   base_url: "localhost"
   sender_email: "kinhotelzarate@kinhotelzarate.com"

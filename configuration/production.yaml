@@ -1,11 +1,9 @@
 application:
   host: 0.0.0.0
   base_url: "localhost"
-redis_uri: "redis://127.0.0.1:6379"
 database:
   require_ssl: true
-  base_url: "localhost"
-redis_uri: "redis://127.0.0.1:6379"
+
 email_client:
   base_url: "https://api.postmarkapp.com"
 redis_uri: "redis://127.0.0.1:6379"
